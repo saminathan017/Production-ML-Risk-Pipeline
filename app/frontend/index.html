@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Risk Pipeline</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="circle circle1"></div>
+        <div class="circle circle2"></div>
+        <div class="circle circle3"></div>
+    </div>
+
+    <div class="container">
+        <header class="main-header">
+            <div class="header-icon">
+                <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M25 5L45 15V35L25 45L5 35V15L25 5Z" stroke="white" stroke-width="2"
+                        fill="rgba(255,255,255,0.1)" />
+                    <circle cx="25" cy="25" r="8" fill="white" fill-opacity="0.3" />
+                    <circle cx="25" cy="25" r="4" fill="white" />
+                </svg>
+            </div>
+            <h1>ML Risk Pipeline</h1>
+            <p>Advanced Machine Learning System</p>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Prediction Card -->
+            <div class="glass-card prediction-section">
+                <div class="card-header">
+                    <div class="header-icon-small"></div>
+                    <h2>Prediction Engine</h2>
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <label>Feature Vector Input</label>
+                        <textarea id="featuresInput"
+                            placeholder="0.5, 0.3, 0.8, 0.2, 0.6, 0.1, 0.9, 0.4, 0.7, 0.3, 0.5, 0.3, 0.8, 0.2, 0.6, 0.1, 0.9, 0.4, 0.7, 0.3, 0.5, 0.3, 0.8, 0.2, 0.6, 0.1, 0.9, 0.4, 0.7, 0.3"
+                            rows="3"></textarea>
+                        <span class="input-hint">30 comma-separated values</span>
+                    </div>
+                    <button id="predictBtn" class="predict-button">
+                        <span>Analyze Risk</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M4 10h12m-6-6l6 6-6 6" stroke="currentColor" stroke-width="2" />
+                        </svg>
+                    </button>
+                    <div id="predictionResult"></div>
+                </div>
+            </div>
+
+            <!-- Model Info Card -->
+            <div class="glass-card info-section">
+                <div class="card-header">
+                    <div class="header-icon-small"></div>
+                    <h2>Model Intelligence</h2>
+                </div>
+                <div class="card-body">
+                    <div id="modelInfoResult" class="model-info-content">
+                        <div class="loading-pulse">Initializing...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Dashboard -->
+        <div class="glass-card metrics-dashboard">
+            <div class="card-header">
+                <div class="header-icon-small"></div>
+                <h2>Performance Analytics</h2>
+            </div>
+            <div class="card-body">
+                <div id="metricsResult" class="metrics-content">
+                    <div class="loading-pulse">Loading metrics...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>

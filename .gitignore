@@ -1,0 +1,270 @@
+################################################################################
+# SECURITY: Sensitive Files & Credentials
+################################################################################
+
+# Environment variables and configuration files
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+
+# API Keys and Credentials
+*.key
+*.pem
+*.cert
+*.p12
+*.pfx
+secrets/
+credentials/
+config/secrets/
+.secrets/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+*.sql
+*.dump
+
+# Backup files
+backups/
+backup/
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+*~
+
+################################################################################
+# Python & Development
+################################################################################
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+virtualenv/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+test-results/
+*.test
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+profile_default/
+ipython_config.py
+
+################################################################################
+# IDEs and Editors
+################################################################################
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# PyCharm / JetBrains
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim / Emacs
+*.swp
+*.swo
+*.swn
+*~
+\#*\#
+.#*
+
+# Cursor
+.cursor/
+
+################################################################################
+# Operating System Files
+################################################################################
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+################################################################################
+# Application-Specific: ML Pipeline
+################################################################################
+
+# ML Artifacts (keep structure, ignore content for git)
+artifacts/models/*.joblib
+artifacts/models/*.pkl
+artifacts/models/*.pickle
+artifacts/models/*.h5
+artifacts/models/*.pt
+artifacts/models/*.pth
+artifacts/models/*.onnx
+artifacts/models/registry.json
+artifacts/metrics/*.json
+artifacts/plots/*.png
+artifacts/plots/*.jpg
+artifacts/plots/*.jpeg
+artifacts/plots/*.svg
+artifacts/plots/*.pdf
+artifacts/monitoring/*.jsonl
+artifacts/monitoring/*.log
+
+# Data (keep structure, ignore content for git)
+data/raw/*.csv
+data/raw/*.json
+data/raw/*.parquet
+data/raw/*.xlsx
+data/raw/*.xls
+data/processed/*.csv
+data/processed/*.json
+data/processed/*.parquet
+data/processed/metadata.json
+data/temp/
+data/cache/
+
+# Logs and Monitoring
+*.log
+logs/
+*.log.*
+log/
+monitoring/
+*.trace
+
+# Temporary and Cache Files
+*.tmp
+*.temp
+tmp/
+temp/
+.cache/
+cache/
+*.cache
+
+# Uploaded Files (if any)
+uploads/
+upload/
+user_uploads/
+static/uploads/
+
+# Local Development
+local/
+.local/
+local_settings.py
+development.ini
+dev_config.py
+
+################################################################################
+# Version Control
+################################################################################
+
+# Git
+*.orig
+*.rej
+.gitattributes.local
+
+################################################################################
+# Documentation & Build
+################################################################################
+
+# Sphinx documentation
+docs/_build/
+docs/.doctrees/
+.sphinx/
+
+# MkDocs documentation
+/site
+
+# Distribution / packaging
+.Python
+build/
+dist/
+*.egg-info/
