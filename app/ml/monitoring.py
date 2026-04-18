@@ -1,33 +1,24 @@
 """
-Monitoring module for ML Risk Pipeline.
-Logs prediction requests, latency, and model performance.
+Advanced monitoring module — logs predictions, computes statistics, serves live feed.
 """
 import json
 from datetime import datetime
 from pathlib import Path
 import numpy as np
-import pandas as pd
 from app.config import MONITORING_DIR
 from app.utils.logging import app_logger
 
 
 class PredictionMonitor:
     """Monitors and logs ML prediction requests."""
-    
+
     def __init__(self, log_file: Path = None):
-        """
-        Initialize prediction monitor.
-        
-        Args:
-            log_file: Path to monitoring log file (JSONL format)
-        """
         if log_file is None:
-            timestamp = datetime.now().strftime("%Y%m%d")
-            log_file = MONITORING_DIR / f"predictions_{timestamp}.jsonl"
-        
+            date_str = datetime.now().strftime("%Y%m%d")
+            log_file = MONITORING_DIR / f"predictions_{date_str}.jsonl"
         self.log_file = log_file
         self.log_file.parent.mkdir(parents=True, exist_ok=True)
-    
+
     def log_prediction(
         self,
         model_version: str,
@@ -36,21 +27,9 @@ class PredictionMonitor:
         probability: float,
         latency_ms: float,
         risk_level: str,
-        metadata: dict = None
+        metadata: dict = None,
     ):
-        """
-        Log a prediction request.
-        
-        Args:
-            model_version: Model version used
-            features: Input features
-            prediction: Predicted class
-            probability: Prediction probability
-            latency_ms: Request latency in milliseconds
-            risk_level: Computed risk level
-            metadata: Additional metadata
-        """
-        log_entry = {
+        entry = {
             "timestamp": datetime.now().isoformat(),
             "model_version": model_version,
             "prediction": int(prediction),
@@ -62,93 +41,76 @@ class PredictionMonitor:
                 "std": float(np.std(features)),
                 "min": float(np.min(features)),
                 "max": float(np.max(features)),
-                "count": len(features)
+                "count": len(features),
             },
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
-        
-        # Append to JSONL file
-        with open(self.log_file, 'a') as f:
-            f.write(json.dumps(log_entry) + '\n')
-    
-    def get_statistics(self, limit: int = 100) -> dict:
-        """
-        Get monitoring statistics from recent logs.
-        
-        Args:
-            limit: Number of recent records to analyze
-            
-        Returns:
-            Dictionary of statistics
-        """
+        with open(self.log_file, "a") as f:
+            f.write(json.dumps(entry) + "\n")
+
+    def _read_logs(self, limit: int) -> list:
         if not self.log_file.exists():
-            return {
-                "total_predictions": 0,
-                "message": "No monitoring data available"
-            }
-        
-        # Read recent logs
-        logs = []
-        with open(self.log_file, 'r') as f:
-            lines = f.readlines()
-            for line in lines[-limit:]:
-                try:
-                    logs.append(json.loads(line))
-                except:
-                    pass
-        
+            return []
+        lines = self.log_file.read_text().splitlines()
+        parsed = []
+        for line in lines[-limit:]:
+            try:
+                parsed.append(json.loads(line))
+            except Exception:
+                pass
+        return parsed
+
+    def get_recent_predictions(self, limit: int = 20) -> list:
+        """Return the most recent prediction entries, newest first."""
+        logs = self._read_logs(limit)
+        return list(reversed(logs))
+
+    def get_statistics(self, limit: int = 1000) -> dict:
+        logs = self._read_logs(limit)
         if not logs:
-            return {
-                "total_predictions": 0,
-                "message": "No valid monitoring data"
-            }
-        
-        # Compute statistics
-        predictions = [log["prediction"] for log in logs]
-        probabilities = [log["probability"] for log in logs]
-        latencies = [log["latency_ms"] for log in logs]
-        risk_levels = [log["risk_level"] for log in logs]
-        
-        stats = {
+            return {"total_predictions": 0, "message": "No monitoring data available"}
+
+        predictions = [lg["prediction"] for lg in logs]
+        probabilities = [lg["probability"] for lg in logs]
+        latencies = [lg["latency_ms"] for lg in logs]
+        risk_levels = [lg["risk_level"] for lg in logs]
+
+        return {
             "total_predictions": len(logs),
             "prediction_distribution": {
-                "positive": sum(1 for p in predictions if p == 1),
-                "negative": sum(1 for p in predictions if p == 0),
-                "positive_rate": np.mean(predictions)
+                "positive": int(sum(1 for p in predictions if p == 1)),
+                "negative": int(sum(1 for p in predictions if p == 0)),
+                "positive_rate": float(np.mean(predictions)),
             },
             "risk_distribution": {
-                "low": sum(1 for r in risk_levels if r == "Low"),
-                "medium": sum(1 for r in risk_levels if r == "Medium"),
-                "high": sum(1 for r in risk_levels if r == "High")
+                "low": int(sum(1 for r in risk_levels if r == "Low")),
+                "medium": int(sum(1 for r in risk_levels if r == "Medium")),
+                "high": int(sum(1 for r in risk_levels if r == "High")),
             },
             "latency_stats": {
-                "mean_ms": np.mean(latencies),
-                "median_ms": np.median(latencies),
-                "p95_ms": np.percentile(latencies, 95),
-                "p99_ms": np.percentile(latencies, 99),
-                "min_ms": np.min(latencies),
-                "max_ms": np.max(latencies)
+                "mean_ms": float(np.mean(latencies)),
+                "median_ms": float(np.median(latencies)),
+                "p95_ms": float(np.percentile(latencies, 95)),
+                "p99_ms": float(np.percentile(latencies, 99)),
+                "min_ms": float(np.min(latencies)),
+                "max_ms": float(np.max(latencies)),
             },
             "probability_stats": {
-                "mean": np.mean(probabilities),
-                "median": np.median(probabilities),
-                "std": np.std(probabilities)
+                "mean": float(np.mean(probabilities)),
+                "median": float(np.median(probabilities)),
+                "std": float(np.std(probabilities)),
             },
             "time_range": {
                 "first": logs[0]["timestamp"],
-                "last": logs[-1]["timestamp"]
-            }
+                "last": logs[-1]["timestamp"],
+            },
         }
-        
-        return stats
 
 
-# Global monitor instance
-_monitor = None
+_monitor: PredictionMonitor = None
 
 
 def get_monitor() -> PredictionMonitor:
-    """Get or create global monitoring instance."""
     global _monitor
     if _monitor is None:
         _monitor = PredictionMonitor()
